@@ -38,11 +38,13 @@ function processData() {
     // с помощью getInfo.
     console.log('----------- 3 все дизайнеры, которые владеют Figma --------------------');
     let figmaDev = persons.filter(person => {
-        return person.skills.findIndex(skill => skill.name.toLowerCase() === 'figma') > -1;
+        return person.skills.findIndex(skill => skill.name.toLowerCase() === 'figma') > -1
+            && getSpecialization.call(person) === 'designer';
     });
     figmaDev.forEach(person => {
         console.log(getInfo.call(person))
     })
+    createBlock('3. Все дизайнеры, которые владеют Figma:', figmaDev)
 
     // 4. Найдите первого попавшегося разработчика, который владеет React.
     // Выведите в консоль через getInfo данные о нем.
@@ -52,6 +54,7 @@ function processData() {
     });
     console.log('----------- 4 первый попавшийся разработчик, который владеет React --------------------');
     console.log(getInfo.call(reactDev))
+    createBlock('4. Первый попавшийся разработчик, который владеет React:', getInfo.call(reactDev))
 
     // 5. Проверьте, все ли пользователи старше 18 лет. Выведите результат проверки в консоль.
     let isAllAdult = persons.every(person => {
@@ -59,6 +62,7 @@ function processData() {
     });
     console.log('----------- 5 все ли пользователи старше 18 лет --------------------');
     console.log(isAllAdult)
+    createBlock('5. Все ли пользователи старше 18 лет:', isAllAdult)
 
 
     // 6. Найдите всех backend-разработчиков из Москвы, которые ищут работу на полный день и отсортируйте их в
@@ -81,6 +85,7 @@ function processData() {
     backendMoscowDevs.forEach(person => {
         console.log(getInfo.call(person), getSalary.call(person), getSpecialization.call(person));
     })
+    createBlock('6. Backend-разработчики из Москвы:', backendMoscowDevs, true)
 
     // 7. Найдите всех дизайнеров, которые владеют Photoshop и Figma одновременно на уровне не ниже 6 баллов.
 
@@ -95,7 +100,7 @@ function processData() {
     goodDesigners.forEach(person => {
         console.log(getInfo.call(person), person);
     })
-
+    createBlock('7. дизайнеры Photoshop и Figma, уровень 6+:', goodDesigners)
     // Соберите команду для разработки проекта:
     // - дизайнера, который лучше всех владеет Figma
     // - frontend разработчика с самым высоким уровнем знания Angular
@@ -132,6 +137,7 @@ function processData() {
     dreamTeam.forEach(member => {
         console.log(getInfo.call(member))
     })
+    createBlock('8. Команда для разработки проекта:', dreamTeam)
 }
 
 
@@ -154,4 +160,27 @@ function getAge() {
         age = age - 1
     }
     return age
+}
+
+
+function createBlock(titleText, items, addSalary= false) {
+    let div = document.createElement('div');
+    let title = document.createElement('h2')
+    title.innerText = titleText
+    let elem = document.createElement('ul')
+    if (Array.isArray(items)) {
+
+        items.forEach(item => {
+            let li = document.createElement('li')
+            li.innerText = addSalary ? `${getInfo.call(item)}, ${getSalary.call(item)}` : getInfo.call(item)
+            elem.appendChild(li)
+        })
+    } else {
+        let li = document.createElement('li')
+        li.innerText = items
+        elem.appendChild(li)
+    }
+    div.appendChild(title);
+    div.appendChild(elem);
+    document.body.appendChild(div);
 }
